@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Pets
+{% endblock %}
+
+{% block links %}
+<div class="collapse navbar-collapse" id="navbar">
+    <ul class="navbar-nav mr-auto mt-2">
+        <li class="nav-link"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-link"><a class="nav-link" href="/event/new_event">New event</a></li>
+    </ul>
+    <ul class="navbar-nav ml-auto mt-2">
+        <li class="nav-link"><a class="nav-link" href="/customer/new_customer">New customer</a></li>
+        <li class="nav-link"><a class="nav-link" href="/customer/customers">Customers</a></li>
+        <li class="nav-link"><a class="nav-link active" href="/pet/pets">Pets</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block header %}
+List of Pets
+{% endblock %}
+
+{% block main %}
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Pet Name</th>
+        <th>Breed</th>
+        <th>Weight (Kg)</th>
+        <th>Gender</th>
+        <th>Pet tutor</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in list %}
+    <tr>
+        <td><a class="links" href="/pet/pet_info/{{ item.PetId }}">{{ item.PetName|title }}</a></td>
+        <td>{{ item.PetBreed|title }}</td>
+        <td>{{ item.PetWeight }}</td>
+        <td>{{ item.PetGender }}</td>
+        <td><a class="links" href="/customer/customer_info/{{ item.id }}">{{ item.TutorName }}</a></td>
+        <td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

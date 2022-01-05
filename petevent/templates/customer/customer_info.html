@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Customer Info
+{% endblock %}
+
+{% block links %}
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto mt-2">
+            <li class="nav-link"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-link"><a class="nav-link" href="/event/new_event">New event</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto mt-2">
+            <li class="nav-link"><a class="nav-link" href="/customer/new_customer">New customer</a></li>
+            <li class="nav-link"><a class="nav-link" href="/customer/customers">Customers</a></li>
+            <li class="nav-link"><a class="nav-link" href="/pet/pets">Pets</a></li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block header %}
+    Customer Info
+{% endblock %}
+
+{% block main %}
+    <label>Name:
+    <p>{{ customer.Name }}</p></label>
+    <br>
+    <div class="form-group">
+        <label>Location:
+        <p>{{ customer.Location }}</p></label>
+        <br>
+        <label>District:
+        <p>{{ customer.District }}</p></label>
+        <br>
+        <label>City:
+        <p>{{ customer.City }}</p></label>
+        <br>
+        <label>State:
+        <p>{{ customer.State }}</p></label>
+        <br>
+        <label>Number:
+        <p>{{ customer.Number }}</p></label>
+        <br>
+        <label>Zip Code:
+        <p>{{ customer.ZipCode }}</p></label>
+        <br>
+        <label>Complement:
+        <p>{{ customer.Complement }}</p></label>
+        <br>
+    </div>
+    <label>Contact:
+    <p>{{ customer.Phone }}</p></label>
+    <br>
+    <label>E-mail:
+    <p>{{ customer.Email }}</p></label>
+    <br>
+    <label>Pets:
+    {% for pet in pets %}
+        <p> - {{ pet.Name }}</p>
+    {% endfor %}
+    </label>
+    <br>
+    <br>
+
+    <form action="" method="post" >
+        <input hidden name="id" value="{{ customer.id }}" type="text">
+        <input type="submit" name="action" class="btn btn-lg btn-secondary submit" value="Edit">
+        <input type="submit" name="action" class="btn btn-lg btn-secondary submit" value="Add Pet">
+    </form>
+
+
+{% endblock %}

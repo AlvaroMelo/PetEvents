@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Events
+{% endblock %}
+
+{% block script %}
+<script>
+    function myFilter() {
+        var year = document.getElementById("year");
+        var month = document.getElementById("month");
+        var pet = document.getElementById("pet");
+
+        var table = document.getElementById("eventsTable");
+        var tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (var i = 0; i < tr.length; i++) {
+            var td_date = tr[i].getElementsByTagName("td")[0];
+            var td_pet = tr[i].getElementsByTagName("td")[1];
+            if (td_date && td_pet) {
+                var dateValue = td_date.textContent;
+                var petName = td_pet.textContent;
+
+                // If year and month are chosen, filter everything
+                if (year.value != 0 && month.value != 0) {
+                    if (year.value == parseInt(dateValue.substring(0, 4)) &&
+                        month.value == parseInt(dateValue.substring(5, 7)) &&
+                        (pet.value == petName || pet.value == 0)) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+
+                // If not, filter only by the petname
+                } else if (pet.value == petName || pet.value == 0) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function resetFilters() {
+        var tr = document.getElementById("eventsTable").getElementsByTagName("tr");
+        for (var i = 0; i < tr.length; i++) {
+            tr[i].style.display = "";
+        }
+    }
+
+
+
+</script>
+{% endblock %}
+
+{% block links %}
+<div class="collapse navbar-collapse" id="navbar">
+    <ul class="navbar-nav mr-auto mt-2">
+        <li class="nav-link active"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-link"><a class="nav-link" href="/event/new_event">New event</a></li>
+    </ul>
+    <ul class="navbar-nav ml-auto mt-2">
+        <li class="nav-link"><a class="nav-link" href="/customer/new_customer">New customer</a></li>
+        <li class="nav-link"><a class="nav-link" href="/customer/customers">Customers</a></li>
+        <li class="nav-link"><a class="nav-link" href="/pet/pets">Pets</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block header %}
+Events - Pets
+{% endblock %}
+
+{% block main %}
+
+<table class="table table-striped" id="eventsTable">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Pet</th>
+        <th>Event</th>
+        <th>Transport</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ev in events.items %}
+    <tr>
+        <td>{{ ev.Date }}</td>
+        <td>{{ ev.Pet }}</td>
+        <td><a class="links" href="/event/edit_event/{{ ev.id }}">{{ ev.Event }}</a></td>
+        {% if ev.Transport %}
+        <td>Yes</td>
+        {% else %}
+        <td>No</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% for page_num in events.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+  {% if page_num %}
+    {% if events.page == page_num %}
+      <a class="btn btn-info mb-4" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+    {% else %}
+      <a class="btn btn-outline-info mb-4" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+    {% endif %}
+  {% else %}
+    ...
+  {% endif %}
+{% endfor %}
+
+<form action="/" method="POST">
+    <input type="submit" name="action" class="btn btn-lg btn-secondary submit" value="Show All">
+</form>
+
+{% endblock %}

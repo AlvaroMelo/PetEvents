@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Pet
+{% endblock %}
+
+{% block links %}
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto mt-2">
+            <li class="nav-link"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-link"><a class="nav-link" href="/event/new_event">New event</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto mt-2">
+            <li class="nav-link"><a class="nav-link" href="/customer/new_customer">New customer</a></li>
+            <li class="nav-link"><a class="nav-link" href="/customer/customers">Customers</a></li>
+            <li class="nav-link"><a class="nav-link" href="/pet/pets">Pets</a></li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block header %}
+    Edit Pet
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <div class="section">
+        <form action="" method="POST">
+            <input name="id" hidden value="{{ pet.id }}" type="text">
+            <label>Name:
+            <input autocomplete="off" autofocus name="name" class="form-control" placeholder="Pet Name" value="{{ pet.Name|title }}" type="text"></label>
+            <br>
+            <br>
+            <label>Breed:
+            <input autocomplete="off" name="breed" class="form-control" placeholder="Breed" value="{{ pet.Breed }}" type="text"></label>
+            <br>
+            <br>
+            <label>Gender:
+              <select name="gender" class="form-control">
+                  {% if pet.Gender == 1 %}
+                    <option value=1 selected>Male</option>
+                    <option value=0>Female</option>
+                  {% else %}
+                    <option value=1>Male</option>
+                    <option value=0 selected>Female</option>
+                {% endif %}
+              </select></label>
+            <br>
+            <br>
+            <label>Weight:
+            <input autocomplete="off" name="weight" class="form-control" placeholder="Pet weight" value="{{ pet.Weight }}" type="text"></label>
+            <br>
+            <br>
+            <label>Is active:
+              <select name="is_client" class="form-control">
+                  {% if pet.IsClient == 1 %}
+                    <option value=1 selected>Yes</option>
+                    <option value=0>No</option>
+                  {% else %}
+                    <option value=1>Yes</option>
+                    <option value=0 selected>No</option>
+                {% endif %}
+              </select></label>
+            <br>
+            <br>
+            <input type="submit" name="action" class="btn btn-lg btn-secondary submit" value="Confirm">
+            <input type="submit" name="action" class="btn btn-lg btn-secondary submit" value="Cancel">
+        </form>
+    </div>
+</div>
+{% endblock %}

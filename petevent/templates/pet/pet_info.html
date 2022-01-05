@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Pet Info
+{% endblock %}
+
+{% block links %}
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto mt-2">
+            <li class="nav-link"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-link"><a class="nav-link" href="/event/new_event">New event</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto mt-2">
+            <li class="nav-link"><a class="nav-link" href="/customer/new_customer">New customer</a></li>
+            <li class="nav-link"><a class="nav-link" href="/customer/customers">Customers</a></li>
+            <li class="nav-link"><a class="nav-link" href="/pet/pets">Pets</a></li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block header %}
+Pet Info
+{% endblock %}
+
+{% block main %}
+<label>Pet Tutor:
+    <p>{{ tutorName }}</p></label>
+<br>
+
+<label>Pet Name:
+    <p>{{ pet.Name }}</p></label>
+<br>
+
+<label>Breed:
+    <p>{{ pet.Breed }}</p></label>
+<br>
+<label>Gender:
+    <p>{{ pet.Gender }}</p></label>
+<br>
+<label>Weight:
+    <p>{{ pet.Weight }}</p></label>
+<br>
+
+<label>Is active:
+    <p>{{ pet.IsClient }}</p></label>
+<br>
+<br>
+
+
+<form action="" method="post">
+    <input hidden name="id" value="{{ pet.id }}" type="text">
+    <input type="submit" class="btn btn-lg btn-secondary submit" name="action" value="Edit Pet">
+</form>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Customers
+{% endblock %}
+
+{% block links %}
+<div class="collapse navbar-collapse" id="navbar">
+    <ul class="navbar-nav mr-auto mt-2">
+        <li class="nav-link"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-link"><a class="nav-link" href="/event/new_event">New event</a></li>
+    </ul>
+    <ul class="navbar-nav ml-auto mt-2">
+        <li class="nav-link"><a class="nav-link" href="/customer/new_customer">New customer</a></li>
+        <li class="nav-link"><a class="nav-link active" href="/customer/customers">Customers</a></li>
+        <li class="nav-link"><a class="nav-link" href="/pet/pets">Pets</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block header %}
+List of Customers
+{% endblock %}
+
+{% block main %}
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th  width="25%">Name</th>
+        <th width="35%">Address</th>
+        <th width="20%">E-mail</th>
+        <th width="20%">Phone Number</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for customer in customers %}
+    <tr>
+        <td><a class="links" href="/customer/customer_info/{{ customer.id }}">{{ customer.Name }}</a></td>
+        <td>{{ customer.Address }}</td>
+        <td>{{ customer.Email }}</td>
+        <td>{{ customer.Phone }}</td>
+        <td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    New Pet
+{% endblock %}
+
+{% block links %}
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto mt-2">
+            <li class="nav-link"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-link"><a class="nav-link" href="/event/new_event">New event</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto mt-2">
+            <li class="nav-link"><a class="nav-link" href="/customer/new_customer">New customer</a></li>
+            <li class="nav-link"><a class="nav-link" href="/customer/customers">Customers</a></li>
+            <li class="nav-link"><a class="nav-link" href="/pet/pets">Pets</a></li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block header %}
+    New Pet
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <div class="section">
+
+        <form action="/pet/new_pet/{{ customer_id }}" method="POST">
+            <div class="form-group">
+                <label>Name:
+                <input type="text" name="name" class="form-control" placeholder="Pet name" autofocus required autocomplete="off"></label>
+            </div>
+
+            <div class="form-group">
+                <label>Breed:
+                    <input type="text" name="breed" class="form-control" placeholder="Breed" required autocomplete="off"></label>
+            </div>
+
+            <div class="form-group">
+                <label>Gender:
+                  <select name="gender" class="form-control" required>
+                        <option value="" selected disabled hidden>Gender</option>
+                        <option value=1>Male</option>
+                        <option value=0>Female</option>
+                  </select></label>
+            </div>
+
+            <div class="form-group">
+                <label>Weight:
+                    <input type="number" name="weight" class="form-control" placeholder="Weight in kg" autocomplete="off" required></label>
+            </div>
+
+            <button class="btn btn-lg btn-secondary submit">Register Pet</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
