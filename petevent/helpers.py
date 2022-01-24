@@ -1,5 +1,5 @@
 from flask import request
-from petevent import db
+from petevent import db, db_alchemy
 
 
 # Save customer on database
@@ -70,3 +70,11 @@ def update_event():
     statement = "UPDATE events SET pet_id = ?, Date = ?, Pet = ?, Event = ?, Transport = ?" \
                 " WHERE id = ?"
     db.execute(statement, pet_id, date, pet_name, event, transport, event_id)
+
+
+def get_choices():
+    pets_list = fetch_list_of_pets()
+    choices = [("", "Select a Pet")]
+    for pet in pets_list:
+        choices.append((pet['id'], pet['Name']))
+    return choices

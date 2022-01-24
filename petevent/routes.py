@@ -1,8 +1,10 @@
 from flask import redirect, render_template, request, url_for
-from petevent import db, app
+from petevent import db, app, db_alchemy
 
 from petevent.helpers import save_customer, save_pet, fetch_list_of_pets, update_event
 from petevent.models import Events, Customers, Pets
+
+from petevent.forms import NewEventForm
 
 ''' Events '''
 
@@ -55,20 +57,19 @@ def all_events():
 # Register new event
 @app.route("/event/new_event", methods=["GET", "POST"])
 def new_event():
-    if request.method == "POST":
-        date = request.form.get("date")
-        pet_id = request.form.get("pet")
-        pet_name = db.execute("SELECT Name FROM pets WHERE id = ?", pet_id)[0]["Name"]
-        event = request.form.get("event")
-        transport = request.form.get("transport")
+    form = NewEventForm()
+    if form.validate_on_submit():
+        date = form.date.data
+        pet_id = form.pet.data
+        pet_name = db_alchemy.session.query(Pets.Name).filter(Pets.id == pet_id).first()[0]
+        event = form.event.data
+        transport = form.need_transport.data
+        event = Events(pet_id=pet_id, Date=date, Pet=pet_name, Event=event, Transport=transport)
+        db_alchemy.session.add(event)
+        db_alchemy.session.commit()
+        return redirect(url_for('index'))
 
-        db.execute("INSERT INTO events (pet_id, Date, pet, Event, Transport) VALUES (?, ?, ?, ?, ? )", pet_id,
-                   date, pet_name, event, transport)
-
-        return redirect("/")
-
-    list_of_pets = fetch_list_of_pets()
-    return render_template("event/new_event.html", pets=list_of_pets)
+    return render_template("event/new_event.html", form=form)
 
 
 # Edit an event

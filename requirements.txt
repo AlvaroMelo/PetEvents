@@ -14,3 +14,5 @@ SQLAlchemy==1.4.28
 sqlparse==0.4.2
 termcolor==1.1.0
 Werkzeug==2.0.2
+
+WTForms~=3.0.1

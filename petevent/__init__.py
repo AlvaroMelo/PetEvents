@@ -6,6 +6,8 @@ app = Flask(__name__)
 
 # Configure SQLAlchemy to use SQLite database
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///pets.db"
+app.config['SECRET_KEY'] = '49f513601021a7d7b34c846bb053b7a3'
+
 db_alchemy = SQLAlchemy(app)
 
 # Configure CS50 Library to use SQLite database
