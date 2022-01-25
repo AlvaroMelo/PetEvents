@@ -22,7 +22,11 @@ def index():
             .paginate(page=page, per_page=5)
         print(events_render)
 
-        return render_template("index.html", events=events_render, home_active=True)
+        return render_template("index.html",
+                               events=events_render,
+                               home_active=True,
+                               title="Events",
+                               header="Events - Pets")
 
     else:
 
@@ -51,7 +55,12 @@ def all_events():
     # Also fetch the list of all pets ever registered for the filter
     list_of_pets = fetch_list_of_pets(True)
 
-    return render_template("event/all_events.html", events=events, years=years, pets=list_of_pets)
+    return render_template("event/all_events.html",
+                           events=events,
+                           years=years,
+                           pets=list_of_pets,
+                           title="All Events - Pets",
+                           header="All Events")
 
 
 # Register new event
@@ -69,7 +78,11 @@ def new_event():
         db_alchemy.session.commit()
         return redirect(url_for('index'))
 
-    return render_template("event/new_event.html", form=form, new_event_active=True)
+    return render_template("event/new_event.html",
+                           form=form,
+                           new_event_active=True,
+                           title="New Event",
+                           header="New Event")
 
 
 # Edit an event
@@ -105,7 +118,9 @@ def edit_event(number):
         form.event.data = event.Event
         form.need_transport.data = event.Transport
 
-    return render_template("event/new_event.html", form=form)
+    return render_template("event/new_event.html", form=form,
+                           title="Edit Event",
+                           header="Edit Event")
 
 
 ''' Customers '''
@@ -118,14 +133,21 @@ def new_customer():
         save_customer()
         return redirect("/")
 
-    return render_template("customer/new_customer.html", new_customer_active=True)
+    return render_template("customer/new_customer.html",
+                           new_customer_active=True,
+                           title="New Customer",
+                           header="New Customer")
 
 
 # List fo customers
 @app.route("/customer/customers")
 def customer():
     ctm = Customers.query.order_by(Customers.Name.asc())
-    return render_template("customer/customers.html", customers=ctm, customer_active=True)
+    return render_template("customer/customers.html",
+                           customers=ctm,
+                           customer_active=True,
+                           title="Customers",
+                           header="List of Customer")
 
 
 # Edit customer
@@ -156,7 +178,9 @@ def edit_customer(number):
                                state=address['State'],
                                number=address['Number'],
                                complement=address['Complement'],
-                               id=number)
+                               id=number,
+                               title="Edit Customer",
+                               header="Edit Customer")
 
 
 # List all about a certain customer
@@ -184,7 +208,11 @@ def customer_info(number):
             if key != "id":
                 current_customer[key] = value
 
-        return render_template("customer/customer_info.html", customer=current_customer, pets=customer_pets)
+        return render_template("customer/customer_info.html",
+                               customer=current_customer,
+                               pets=customer_pets,
+                               title="Customer Info",
+                               header="Customer Info")
 
 
 ''' Pets '''
@@ -204,7 +232,10 @@ def new_pet(number):
                    customer_id, name, breed, gender, weight)
         return redirect("/")
 
-    return render_template("pet/new_pet.html", customer_id=customer_id)
+    return render_template("pet/new_pet.html",
+                           customer_id=customer_id,
+                           title="New Pet",
+                           header="New Pet")
 
 
 # List all pets
@@ -228,7 +259,9 @@ def pets():
         else:
             item["PetGender"] = "Female"
     print(list_of_pets)
-    return render_template("pet/pets.html", list=list_of_pets, pets_active=True)
+    return render_template("pet/pets.html", list=list_of_pets, pets_active=True,
+                           title="Pets",
+                           header="List of Pets")
 
 
 # List all about a certain pet
@@ -256,7 +289,9 @@ def pet_info(number):
         statement_tutor = "SELECT Name FROM customers WHERE id = ?"
         tutor_name = db.execute(statement_tutor, current_pet["customer_id"])[0]["Name"]
         print(tutor_name)
-        return render_template("/pet/pet_info.html", tutorName=tutor_name, pet=current_pet)
+        return render_template("/pet/pet_info.html", tutorName=tutor_name, pet=current_pet,
+                               title="Pet Info",
+                               header="Pet Info")
 
 
 # Edit pet information
@@ -276,4 +311,6 @@ def edit_pet(number):
         statement = "SELECT * FROM pets WHERE id = ?"
         current_pet = db.execute(statement, number)[0]
         print("current_pet = {}".format(current_pet))
-        return render_template("/pet/edit_pet.html", pet=current_pet)
+        return render_template("/pet/edit_pet.html", pet=current_pet,
+                               title="Edit Pet",
+                               header="Edit Pet")
