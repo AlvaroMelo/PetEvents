@@ -1,7 +1,7 @@
 from flask import redirect, render_template, request, url_for, flash
 from petevent import db, app, db_alchemy
 
-from petevent.helpers import save_customer, save_pet, fetch_list_of_pets, update_event
+from petevent.helpers import save_customer, save_pet, fetch_list_of_pets, update_event, get_choices
 from petevent.models import Events, Customers, Pets
 
 from petevent.forms import NewEventForm, EditEventForm
@@ -67,6 +67,7 @@ def all_events():
 @app.route("/event/new_event", methods=["GET", "POST"])
 def new_event():
     form = NewEventForm()
+    form.pet.choices = get_choices()
     if form.validate_on_submit():
         date = form.date.data
         pet_id = form.pet.data
@@ -89,6 +90,7 @@ def new_event():
 @app.route("/event/edit_event/<number>", methods=["GET", "POST"])
 def edit_event(number):
     form = EditEventForm()
+    form.pet.choices = [(pet['id'], pet['Name']) for pet in fetch_list_of_pets()]
     event = Events.query.get_or_404(number)
 
     if form.validate_on_submit():

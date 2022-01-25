@@ -7,7 +7,7 @@ from petevent.helpers import get_choices, fetch_list_of_pets
 
 class NewEventForm(FlaskForm):
     date = DateField('Date', validators=[DataRequired()])
-    pet = SelectField('Pet', choices=get_choices(), validators=[DataRequired()])
+    pet = SelectField('Pet', validators=[DataRequired()])
 
     event = StringField('Event', validators=[DataRequired(), Length(min=2, max=20)])
     need_transport = BooleanField('Need transport?')
@@ -17,7 +17,6 @@ class NewEventForm(FlaskForm):
 class EditEventForm(FlaskForm):
     date = DateField('Date', validators=[DataRequired()])
     pet = SelectField('Pet', coerce=int,
-                      choices=[(pet['id'], pet['Name']) for pet in fetch_list_of_pets()],
                       validators=[DataRequired()])
 
     event = StringField('Event', validators=[DataRequired(), Length(min=2, max=20)])
