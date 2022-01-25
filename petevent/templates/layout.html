@@ -23,8 +23,40 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    {% block links %}{% endblock %}
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto mt-2">
+            {% if home_active %}
+            <li class="nav-link active"><a class="nav-link" href="/">Home</a></li>
+            {% else %}
+            <li class="nav-link"><a class="nav-link" href="/">Home</a></li>
+            {% endif %}
 
+            {% if new_event_active %}
+            <li class="nav-link active"><a class="nav-link" href="/event/new_event">New event</a></li>
+            {% else %}
+            <li class="nav-link"><a class="nav-link" href="/event/new_event">New event</a></li>
+            {% endif %}
+        </ul>
+        <ul class="navbar-nav ml-auto mt-2">
+            {% if new_customer_active %}
+            <li class="nav-link active"><a class="nav-link" href="/customer/new_customer">New customer</a></li>
+            {% else %}
+            <li class="nav-link"><a class="nav-link" href="/customer/new_customer">New customer</a></li>
+            {% endif %}
+
+            {% if customer_active %}
+            <li class="nav-link active"><a class="nav-link" href="/customer/customers">Customers</a></li>
+            {% else %}
+            <li class="nav-link"><a class="nav-link" href="/customer/customers">Customers</a></li>
+            {% endif %}
+
+            {% if pets_active %}
+            <li class="nav-link"><a class="nav-link active" href="/pet/pets">Pets</a></li>
+            {% else %}
+            <li class="nav-link"><a class="nav-link" href="/pet/pets">Pets</a></li>
+            {% endif %}
+        </ul>
+    </div>
 </nav>
 
 <h1 class="text-center">{% block header %}{% endblock %}</h1>

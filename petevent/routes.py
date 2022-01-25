@@ -22,7 +22,7 @@ def index():
             .paginate(page=page, per_page=5)
         print(events_render)
 
-        return render_template("index.html", events=events_render)
+        return render_template("index.html", events=events_render, home_active=True)
 
     else:
 
@@ -69,7 +69,7 @@ def new_event():
         db_alchemy.session.commit()
         return redirect(url_for('index'))
 
-    return render_template("event/new_event.html", form=form)
+    return render_template("event/new_event.html", form=form, new_event_active=True)
 
 
 # Edit an event
@@ -108,14 +108,14 @@ def new_customer():
         save_customer()
         return redirect("/")
 
-    return render_template("customer/new_customer.html")
+    return render_template("customer/new_customer.html", new_customer_active=True)
 
 
 # List fo customers
 @app.route("/customer/customers")
 def customer():
     ctm = Customers.query.order_by(Customers.Name.asc())
-    return render_template("customer/customers.html", customers=ctm)
+    return render_template("customer/customers.html", customers=ctm, customer_active=True)
 
 
 # Edit customer
@@ -218,7 +218,7 @@ def pets():
         else:
             item["PetGender"] = "Female"
     print(list_of_pets)
-    return render_template("pet/pets.html", list=list_of_pets)
+    return render_template("pet/pets.html", list=list_of_pets, pets_active=True)
 
 
 # List all about a certain pet
