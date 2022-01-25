@@ -24,7 +24,7 @@ New Event
                 </div>
 
                 <div class="form-group">
-                    {{ form.event.label(class="form-control-label", placeholder="Teste") }}
+                    {{ form.event.label(class="form-control-label") }}
                     {{ form.event(class="form-control form-control-lg", placeholder="Evento") }}
                 </div>
 
@@ -34,7 +34,13 @@ New Event
                 </div>
 
                 <div class="form-group">
-                    {{ form.submit(class="btn btn-lg btn-secondary submit") }}
+                    {% if form.submit %}
+                        {{ form.submit(class="btn btn-lg btn-secondary submit") }}
+                    {% else %}
+                        {{ form.confirm(class="btn btn-lg btn-secondary submit") }}
+                        {{ form.cancel(class="btn btn-lg btn-secondary submit") }}
+                        {{ form.delete(class="btn btn-danger btn-lg submit") }}
+                    {% endif %}
                 </div>
             </fieldset>
         </form>

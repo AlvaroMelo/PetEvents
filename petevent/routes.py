@@ -1,10 +1,10 @@
-from flask import redirect, render_template, request, url_for
+from flask import redirect, render_template, request, url_for, flash
 from petevent import db, app, db_alchemy
 
 from petevent.helpers import save_customer, save_pet, fetch_list_of_pets, update_event
 from petevent.models import Events, Customers, Pets
 
-from petevent.forms import NewEventForm
+from petevent.forms import NewEventForm, EditEventForm
 
 ''' Events '''
 
@@ -75,27 +75,37 @@ def new_event():
 # Edit an event
 @app.route("/event/edit_event/<number>", methods=["GET", "POST"])
 def edit_event(number):
-    if request.method == "POST":
+    form = EditEventForm()
+    event = Events.query.get_or_404(number)
 
-        # Confirm button:
-        if request.form.get("action") == "Confirm":
-            update_event()
+    if form.validate_on_submit():
+        if form.confirm.data:
+            event.Date = form.date.data
+            event.pet_id = form.pet.data
+            event.Pet = Pets.query.get(event.pet_id).Name
+            event.Event = form.event.data
+            event.Transport = form.need_transport.data
 
-        # Delete button:
-        elif request.form.get("action") == "Delete Event":
-            event_id = request.form.get("id")
-            db.execute("DELETE FROM events WHERE id = ?", event_id)
+            db_alchemy.session.commit()
+            flash("Event updated successfully!", 'success')
 
-        # Cancel button - No action needed:
-        else:
+        elif form.delete.data:
+            db_alchemy.session.delete(event)
+            db_alchemy.session.commit()
+            flash("Event deleted!", 'success')
+
+        elif form.cancel.data:
             pass
 
         return redirect("/")
 
-    else:
-        list_of_pets = fetch_list_of_pets()
-        event = db.execute("SELECT * FROM events WHERE id = ?", number)[0]
-        return render_template("/event/edit_event.html", pets=list_of_pets, event=event)
+    elif request.method == 'GET':
+        form.date.data = event.Date
+        form.pet.data = event.pet_id
+        form.event.data = event.Event
+        form.need_transport.data = event.Transport
+
+    return render_template("event/new_event.html", form=form)
 
 
 ''' Customers '''
