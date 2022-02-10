@@ -32,10 +32,11 @@ div#navbar {
   text-decoration: none;
   font-weight: bold;
   font-size: large;
+  color: green;
 }
 
 .links:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .submit {
@@ -44,9 +45,29 @@ div#navbar {
 }
 
 .submit:hover {
-	transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 .address {
     padding: 10px;
+}
+
+.state {
+    width: 7%;
+}
+
+body {
+  height: 100%;
+  background-color: #333;
+  display: -ms-flexbox;
+  display: flex;
+  color: #FFF;
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+}
+
+td, th {
+  color: #fff;
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 }
