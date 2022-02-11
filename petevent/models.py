@@ -7,6 +7,7 @@ class Customers(db_alchemy.Model):
     Address = db_alchemy.Column(db_alchemy.String(100), nullable=False)
     Email = db_alchemy.Column(db_alchemy.String(45), nullable=False)
     Phone = db_alchemy.Column(db_alchemy.String(45), nullable=False)
+    full_address = db_alchemy.relationship('Addresses', backref='full_address', lazy=True)
 
     def __repr__(self):
         return "Customer({}, {})".format(self.Name, self.Email)
@@ -39,7 +40,7 @@ class Pets(db_alchemy.Model):
 
 class Addresses(db_alchemy.Model):
     id = db_alchemy.Column(db_alchemy.Integer, primary_key=True)
-    customer_id = db_alchemy.Column(db_alchemy.Integer, db_alchemy.ForeignKey('customers.id'))
+    customer_id = db_alchemy.Column(db_alchemy.Integer, db_alchemy.ForeignKey('customers.id'), nullable=False)
     ZipCode = db_alchemy.Column(db_alchemy.String(8), nullable=False)
     Location = db_alchemy.Column(db_alchemy.String(100), nullable=False)
     District = db_alchemy.Column(db_alchemy.String(100), nullable=False)

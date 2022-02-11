@@ -4,7 +4,7 @@ from petevent import db, app, db_alchemy
 from petevent.helpers import save_customer, save_pet, fetch_list_of_pets, update_event, get_choices
 from petevent.models import Events, Customers, Pets
 
-from petevent.forms import NewEventForm, EditEventForm
+from petevent.forms import NewEventForm, EditEventForm, NewCustomerForm, EditCustomerForm
 
 ''' Events '''
 
@@ -68,6 +68,7 @@ def all_events():
 def new_event():
     form = NewEventForm()
     form.pet.choices = get_choices()
+    print("Teste csrf: {}".format(form.csrf_token))
     if form.validate_on_submit():
         date = form.date.data
         pet_id = form.pet.data
@@ -131,11 +132,14 @@ def edit_event(number):
 # Register new customer
 @app.route("/customer/new_customer", methods=["GET", "POST"])
 def new_customer():
-    if request.method == "POST":
-        save_customer()
-        return redirect("/")
+    form = NewCustomerForm()
+    print("Teste csrf: {}".format(form.csrf_token))
+    if form.validate_on_submit():
+        save_customer(form)
+        return redirect(url_for('customer'))
 
-    return render_template("customer/new_customer.html",
+    return render_template("customer/customer.html",
+                           form=form,
                            new_customer_active=True,
                            title="New Customer",
                            header="New Customer")
@@ -155,32 +159,37 @@ def customer():
 # Edit customer
 @app.route("/customer/edit_customer/<number>", methods=["GET", "POST"])
 def edit_customer(number):
-    if request.method == "POST":
+    form = EditCustomerForm(request.form)
+    if form.cancel.data:
+        print("Teste cancel")
+
+    if form.validate_on_submit():
         # Confirm button
-        if request.form.get("action") == "Confirm":
-            save_customer()
+        if form.confirm.data:
+            save_customer(form, number)
+            flash("Customer updated!", 'success')
             return redirect(url_for('customer'))
 
         # Cancel button
         # elif request.form.get("action") == "Cancel":
         else:
             return redirect("/customer/customer_info/{}".format(number))
-    else:
-        ctm = db.execute("SELECT * FROM customers WHERE id = ?", number)[0]
-        address = db.execute("SELECT * FROM addresses WHERE customer_id = ?", number)[0]
-        return render_template("/customer/edit_customer.html",
-                               name=ctm['Name'],
-                               email=ctm['Email'],
-                               address=ctm['Address'],
-                               phone=ctm['Phone'],
-                               zip_code=address['ZipCode'],
-                               location=address['Location'],
-                               district=address['District'],
-                               city=address['City'],
-                               state=address['State'],
-                               number=address['Number'],
-                               complement=address['Complement'],
-                               id=number,
+
+    elif request.method == "GET":
+        ctm = Customers.query.get_or_404(number)
+        address = ctm.full_address[0]
+        form.name.data = ctm.Name
+        form.email.data = ctm.Email
+        form.phone.data = ctm.Phone
+        form.zip_code.data = address.ZipCode
+        form.location.data = address.Location
+        form.district.data = address.District
+        form.city.data = address.City
+        form.state.data = address.State
+        form.number.data = address.Number
+        form.complement.data = address.Complement
+        return render_template("customer/customer.html",
+                               form=form,
                                title="Edit Customer",
                                header="Edit Customer")
 

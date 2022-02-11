@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+
+{% block script %}
+<script>
+    // Thank you, viacep: https://viacep.com.br/exemplo/javascript/
+
+    function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP not found.");
+        }
+    }
+
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Invalid CEP format.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    };
+
+</script>
+{% endblock %}
+
+
+{% block main %}
+
+<div class="inner cover">
+
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.csrf_token }}
+            <fieldset class="fomr-group">
+
+                <div class="form-group">
+                    {{ form.name.label(class="form-control-label") }}
+                    {{ (form.name(class="form-control form-control-lg", autocomplete="off", autofocus="true")) }}
+
+                </div>
+
+                <div class="form-group">
+                    {{ form.phone.label(class="form-control-label") }}
+                    {{ form.phone(class="form-control form-control-lg", autocomplete="off") }}
+
+                </div>
+
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {{ form.email(class="form-control form-control-lg", autocomplete="off") }}
+
+                </div>
+            </fieldset>
+
+            <br>
+            <br>
+            <h2>Address Information:</h2>
+            <br>
+
+            <fieldset class="form-group">
+                <div class="form-group">
+                    {{ form.zip_code.label(class="form-control-label") }}
+                    {{ form.zip_code(class="form-control form-control-lg cep", onblur="pesquisacep(this.value);", autocomplete="off") }}
+
+                </div>
+                <div class="form-group">
+                    {{ form.location.label(class="form-control-label") }}
+                    {{ form.location(class="form-control form-control-lg", id="rua", autocomplete="off") }}
+
+                </div>
+                <div class="form-group">
+                    {{ form.number.label(class="form-control-label") }}
+                    {{ form.number(class="form-control form-control-lg", autocomplete="off") }}
+
+                </div>
+                <div class="form-group">
+                    {{ form.complement.label(class="form-control-label") }}
+                    {{ form.complement(class="form-control form-control-lg", autocomplete="off") }}
+
+                </div>
+                <div class="form-group">
+                    {{ form.district.label(class="form-control-label") }}
+                    {{ form.district(class="form-control form-control-lg", id="bairro", autocomplete="off") }}
+
+                </div>
+                <div class="form-group">
+                    {{ form.city.label(class="form-control-label") }}
+                    {{ form.city(class="form-control form-control-lg", id="cidade", autocomplete="off") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.state.label(class="form-control-label") }}
+                    {{ form.state(class="form-control state", id="uf", autocomplete="off") }}
+                </div>
+            </fieldset>
+
+            <div class="form-group">
+                {% if form.confirm %}
+                    {{ form.confirm(class="btn btn-lg btn-secondary submit") }}
+                    {{ form.cancel(class="btn btn-lg btn-secondary submit") }}
+                {% else %}
+                    {{ form.register(class="btn btn-lg btn-secondary submit") }}
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock main %}

@@ -1,41 +1,51 @@
 from flask import request
 from petevent import db, db_alchemy
 
+from petevent.forms import NewCustomerForm
+from petevent.models import Addresses, Customers
+
 
 # Save customer on database
-def save_customer():
-    customer_id = request.form.get("id")
-    print(customer_id)
+def save_customer(form: NewCustomerForm, customer_id: int = None) -> None:
+    zip_code = form.zip_code.data
+    location = form.location.data
+    district = form.district.data
+    city = form.city.data
+    state = form.state.data
+    number = form.number.data
+    complement = form.complement.data
 
-    zip_code = request.form.get("zip_code")
-    location = request.form.get("location")
-    district = request.form.get("district")
-    city = request.form.get("city")
-    state = request.form.get("state")
-    number = request.form.get("number")
-    complement = request.form.get("complement")
-
-    name = request.form.get("name").title()
-    phone = request.form.get("phone")
-    email = request.form.get("email")
+    name = form.name.data.title()
+    phone = form.phone.data
+    email = form.email.data
     address = "{}, {}, {} - {}".format(location, number, city, state)
 
     if customer_id is None:
-        statement_customer = "INSERT INTO customers (Name, Address, Email, Phone) VALUES (?, ?, ?, ? )"
-        statement_address = "INSERT INTO addresses" \
-                            "(customer_id, ZipCode, Location, District, City, State, Number, Complement)" \
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        customer_id = db.execute(statement_customer, name, address, email, phone)
-        db.execute(statement_address, customer_id, zip_code, location, district, city, state, number, complement)
-    else:
-        statement_customer = "UPDATE customers SET Name= ?, Email= ?, Address = ?, Phone= ? WHERE id = ?"
-        statement_address = "UPDATE addresses SET " \
-                            "ZipCode = ?, Location = ?, District = ?, City = ?, " \
-                            "State = ?, Number = ?, Complement = ? WHERE customer_id = ?"
+        new_customer = Customers(Name=name, Address=address, Email=email, Phone=phone)
+        db_alchemy.session.add(new_customer)
+        db_alchemy.session.commit()
+        customer_id = Customers.query.order_by(Customers.id.desc()).first().id
 
-        db.execute(statement_customer, name, email, address, phone, customer_id)
-        db.execute(statement_address, zip_code, location, district, city,
-                   state, number, complement, customer_id)
+        customer_address = Addresses(customer_id=customer_id, ZipCode=zip_code, Location=location, District=district,
+                                     City=city, State=state, Number=number, Complement=complement)
+        db_alchemy.session.add(customer_address)
+        db_alchemy.session.commit()
+
+    else:
+        updated_customer = Customers.query.get_or_404(customer_id)
+        updated_customer.Name = name
+        updated_customer.Address = address
+        updated_customer.Email = email
+        updated_customer.Phone = phone
+
+        updated_customer.full_address[0].ZipCode = zip_code
+        updated_customer.full_address[0].Location = location
+        updated_customer.full_address[0].District = district
+        updated_customer.full_address[0].City = city
+        updated_customer.full_address[0].State = state
+        updated_customer.full_address[0].Number = number
+        updated_customer.full_address[0].Complement = complement
+        db_alchemy.session.commit()
 
 
 # Save pet on database
