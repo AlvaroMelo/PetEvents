@@ -3,11 +3,6 @@ from wtforms import DateField, SelectField, StringField, BooleanField, SubmitFie
 from wtforms.validators import DataRequired, Length, ValidationError
 
 
-def _required(form, field):
-    if not field.raw_data or not field.raw_data[0]:
-        raise ValidationError('Field is required')
-
-
 class NewEventForm(FlaskForm):
     date = DateField('Date', validators=[DataRequired()])
     pet = SelectField('Pet', validators=[DataRequired()])
@@ -19,9 +14,7 @@ class NewEventForm(FlaskForm):
 
 class EditEventForm(FlaskForm):
     date = DateField('Date', validators=[DataRequired()])
-    pet = SelectField('Pet', coerce=int,
-                      validators=[DataRequired()])
-
+    pet = SelectField('Pet', coerce=int, validators=[DataRequired()])
     event = StringField('Event', validators=[DataRequired(), Length(min=2, max=20)])
     need_transport = BooleanField('Need transport?')
     confirm = SubmitField('Confirm')

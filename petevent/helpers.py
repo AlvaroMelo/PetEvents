@@ -33,18 +33,19 @@ def save_customer(form: NewCustomerForm, customer_id: int = None) -> None:
 
     else:
         updated_customer = Customers.query.get_or_404(customer_id)
+        full_address = updated_customer.full_address[0]
         updated_customer.Name = name
         updated_customer.Address = address
         updated_customer.Email = email
         updated_customer.Phone = phone
 
-        updated_customer.full_address[0].ZipCode = zip_code
-        updated_customer.full_address[0].Location = location
-        updated_customer.full_address[0].District = district
-        updated_customer.full_address[0].City = city
-        updated_customer.full_address[0].State = state
-        updated_customer.full_address[0].Number = number
-        updated_customer.full_address[0].Complement = complement
+        full_address.ZipCode = zip_code
+        full_address.Location = location
+        full_address.District = district
+        full_address.City = city
+        full_address.State = state
+        full_address.Number = number
+        full_address.Complement = complement
         db_alchemy.session.commit()
 
 

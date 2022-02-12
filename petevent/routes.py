@@ -68,7 +68,6 @@ def all_events():
 def new_event():
     form = NewEventForm()
     form.pet.choices = get_choices()
-    print("Teste csrf: {}".format(form.csrf_token))
     if form.validate_on_submit():
         date = form.date.data
         pet_id = form.pet.data
@@ -133,7 +132,6 @@ def edit_event(number):
 @app.route("/customer/new_customer", methods=["GET", "POST"])
 def new_customer():
     form = NewCustomerForm()
-    print("Teste csrf: {}".format(form.csrf_token))
     if form.validate_on_submit():
         save_customer(form)
         return redirect(url_for('customer'))
@@ -171,7 +169,6 @@ def edit_customer(number):
             return redirect(url_for('customer'))
 
         # Cancel button
-        # elif request.form.get("action") == "Cancel":
         else:
             return redirect("/customer/customer_info/{}".format(number))
 
